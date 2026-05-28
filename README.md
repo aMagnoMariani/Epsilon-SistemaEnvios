@@ -1,6 +1,6 @@
 # Epsilon_UDO
 
 Integrantes:
-Alejandro Mariani
+Alejandro Mariani<br>
 Jose Felix Cedeño
 
