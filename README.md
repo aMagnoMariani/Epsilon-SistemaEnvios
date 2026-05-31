@@ -10,7 +10,7 @@ El sistema contará con las siguientes especificaciones:<br>
 6. El código estará optimizado para que consuma la menor cantidad de RAM posible<br>
 
 Lenguaje de Programacion: Python<br>
-Herramientas: HTML, CSS, Flash<br>
+Herramientas: HTML, CSS, Flask<br>
 
 Integrantes:<br>
 Alejandro Mariani<br>
