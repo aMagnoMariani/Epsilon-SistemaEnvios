@@ -1,6 +1,6 @@
 # Epsilon_UDO
 
-Sistema de Logística de Última Milla — Epsilon_UDO
+SistemaEnvios — Epsilon_UDO
 
 Descripción
 -----------
@@ -22,6 +22,7 @@ Integrantes
 -----------
 - Alejandro Mariani
 - Jose Felix Cedeño
+- Diana Yegüez
 
 Instalación rápida
 ------------------
@@ -64,13 +65,4 @@ Contribuciones
 --------------
 - Seguir el estilo de código con `black` y habilitar `pre-commit` si se desea.
 - Abrir issues y pull requests indicando el propósito y pruebas realizadas.
-
-Licencia
---------
-Proyecto para fines educativos; añadir una licencia si se publica.
-=======
-Integrantes:<br>
-Alejandro Mariani<br>
-Jose Felix Cedeño<br>
-Diana Yegüez<br>
 
