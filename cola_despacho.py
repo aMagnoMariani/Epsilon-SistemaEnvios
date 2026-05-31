@@ -4,7 +4,7 @@ Cola de prioridad con heapq y pila de historial para operaciones de deshacer.
 """
 
 import heapq
-from models import Orden
+from models.order import Orden
 
 
 class ColaDespacho:

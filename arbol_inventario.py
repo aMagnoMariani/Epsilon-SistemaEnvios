@@ -3,7 +3,7 @@ Módulo Árbol de Inventario — Unidad V
 Árbol Binario de Búsqueda (BST) para búsqueda eficiente de productos.
 """
 
-from models import Producto
+from models.product import Producto
 
 
 class NodoBST:

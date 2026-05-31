@@ -1,1 +1,15 @@
-flask
+# Epsilon_UDO — Requisitos del proyecto
+# Runtime (versiones compatibles)
+Flask>=2.2,<3.1
+python-dotenv>=1.0,<2.0
+gunicorn>=20.1,<21
+
+# Herramientas de desarrollo (opcional, para contribución y pruebas)
+pytest>=7.0,<8.0
+black>=23.1.0,<24.0
+pre-commit>=2.20,<3.0
+
+# Notas:
+# - Instalar en un virtualenv: python -m venv .venv && source .venv/bin/activate
+# - Luego: pip install -r requirements.txt
+# - Para dependencias sólo de desarrollo, considerar usar requirements-dev.txt

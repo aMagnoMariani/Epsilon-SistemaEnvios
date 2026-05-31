@@ -1,19 +1,71 @@
 # Epsilon_UDO
-Sistema de Logística y Envíos<br>
 
-El sistema contará con las siguientes especificaciones:<br>
-1. Al ingresar el código de un producto, el sistema lo encuentra al instante entre miles de opciones, sin tener que revisar uno por uno<br>
-2. Si entra un pedido "Express" o "VIP", el programa automáticamente lo salta al frente de la fila para que el repartidor lo lleve primero<br>
-3. Si el operador despacha un paquete por error, habrá una función que cancele el último movimiento y regrese el paquete al almacén<br>
-4. El sistema calculará la ruta de entrega que gaste menos combustible<br>
-5. Toda la información (inventario, rutas, pedidos) se guardará automáticamente en archivos
-6. El código estará optimizado para que consuma la menor cantidad de RAM posible<br>
+Sistema de Logística de Última Milla — Epsilon_UDO
 
-Lenguaje de Programacion: Python<br>
-Herramientas: HTML, CSS, Antigravity IDE<br>
-framework: Flask<br>
+Descripción
+-----------
+Epsilon_UDO es una aplicación educativa y funcional para gestionar inventario y despachos en una operación de última milla. Implementa estructuras de datos y algoritmos comunes (árboles binarios de búsqueda, colas de prioridad, pilas, grafos y Dijkstra) para ofrecer:
 
-Integrantes:<br>
-Alejandro Mariani<br>
-Jose Felix Cedeño
+- Búsqueda eficiente de productos por ID.
+- Cola de despacho con prioridad (Express vs Normal) y posibilidad de deshacer el último despacho.
+- Cálculo de rutas óptimas según costo de combustible o tiempo usando un grafo ponderado.
+- Persistencia simple en JSON para productos, órdenes y mapa.
+
+Lenguaje y herramientas
+-----------------------
+- Lenguaje: Python 3.8+
+- Framework web: Flask
+- Persistencia: JSON (módulo `json`)
+- Recomendadas: `python-dotenv`, `gunicorn` (despliegue)
+
+Integrantes
+-----------
+- Alejandro Mariani
+- Jose Felix Cedeño
+
+Instalación rápida
+------------------
+1. Crear y activar un entorno virtual:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+2. Instalar dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Iniciar la aplicación en desarrollo:
+
+```bash
+python app.py
+```
+
+Archivos relevantes
+------------------
+- `app.py`: Rutas y orquestación del sistema (Flask).
+- `models.py`: Clases `Producto` y `Orden`.
+- `persistencia.py`: Lectura/escritura JSON.
+- `arbol_inventario.py`: Árbol Binario de Búsqueda para productos.
+- `cola_despacho.py`: Cola de prioridad para órdenes y pila de historial.
+- `mapa_logistico.py`: Grafo y algoritmo de Dijkstra para rutas.
+- `datos/`: JSON de ejemplo (`productos.json`, `ordenes.json`, `mapa.json`).
+- `templates/` y `static/`: Frontend simple usando Jinja2 y CSS.
+
+Uso y pruebas
+------------
+- La aplicación expone rutas web (por defecto `http://127.0.0.1:5000/`).
+- Para pruebas unitarias, usar `pytest` (ya incluido en `requirements.txt`).
+
+Contribuciones
+--------------
+- Seguir el estilo de código con `black` y habilitar `pre-commit` si se desea.
+- Abrir issues y pull requests indicando el propósito y pruebas realizadas.
+
+Licencia
+--------
+Proyecto para fines educativos; añadir una licencia si se publica.
 
