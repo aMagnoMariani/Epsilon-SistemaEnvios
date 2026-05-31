@@ -22,7 +22,7 @@ Integrantes
 -----------
 - Alejandro Mariani
 - Jose Felix Cedeño
-- Diana Yegüez
+- Diana Yegüez 
 
 Instalación rápida
 ------------------
