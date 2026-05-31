@@ -68,4 +68,9 @@ Contribuciones
 Licencia
 --------
 Proyecto para fines educativos; añadir una licencia si se publica.
+=======
+Integrantes:<br>
+Alejandro Mariani<br>
+Jose Felix Cedeño<br>
+Diana Yegüez<br>
 
