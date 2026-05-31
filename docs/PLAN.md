@@ -1,5 +1,5 @@
 | Estructura | En dónde se usa | Operaciones requeridas | Biblioteca | Integrante encargado |
-| :--- | :---: | :---: | :---: | ---: |
+| :--- | :---: | :---: | :---: | :---: |
 | Pila |
 | Cola |
 | Lista enlazada |
