@@ -24,6 +24,7 @@ Integrantes
 - José Félix Cedeño
 - Diana Yegüez
 - Victoria Santodomingo<br>
+- Ariadna Bucarito
 
 Instalación rápida
 ------------------
