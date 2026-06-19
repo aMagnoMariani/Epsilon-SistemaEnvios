@@ -32,7 +32,7 @@ Instalación rápida
 
 ``` bash
 python -m venv .venv
-origen .venv/bin/activate
+source .venv/bin/activate
 ```
 
 2. Instalar dependencias:
@@ -44,7 +44,7 @@ pip install -r requirements.txt
 3. Iniciar la aplicación en desarrollo:
 
 ``` bash
-aplicación python.py
+python app.py
 ```
 
 Archivos relevantes

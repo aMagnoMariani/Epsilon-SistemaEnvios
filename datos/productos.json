@@ -58,5 +58,11 @@
     "nombre": "Lámpara LED Escritorio",
     "precio": 45.0,
     "stock": 40
+  },
+  {
+    "id": 305,
+    "nombre": "Samsung S22 U",
+    "precio": 1200.0,
+    "stock": 40
   }
 ]

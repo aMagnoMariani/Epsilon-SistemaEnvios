@@ -70,6 +70,34 @@ def buscar_producto():
     return render_template('productos.html', productos=todos_productos, resultado=producto, tiempo_busqueda=tiempo_ms, id_buscado=id_buscar)
 
 
+@app.route('/productos/nuevo', methods=['POST'])
+def nuevo_producto():
+    try:
+        nuevo_id = int(request.form.get('id', 0))
+        nombre = request.form.get('nombre', '').strip()
+        precio = float(request.form.get('precio', 0.0))
+        stock = int(request.form.get('stock', 0))
+        
+        if nuevo_id <= 0 or not nombre or precio < 0 or stock < 0:
+            raise ValueError("Valores fuera de rango o vacíos.")
+            
+    except (ValueError, TypeError):
+        flash('Datos inválidos. Verifica que los números sean correctos y los campos no estén vacíos.', 'warning')
+        return redirect(url_for('productos'))
+
+    # Verificar que el ID no exista ya en el árbol
+    if arbol.buscar(nuevo_id):
+        flash(f'Error: Ya existe un producto con el ID {nuevo_id} en el inventario.', 'danger')
+        return redirect(url_for('productos'))
+
+    # Crear e insertar
+    nuevo_prod = Producto(id=nuevo_id, nombre=nombre, precio=precio, stock=stock)
+    arbol.insertar(nuevo_prod)
+    
+    flash(f'Producto agregado exitosamente: {nombre} (ID: {nuevo_id}).', 'success')
+    return redirect(url_for('productos'))
+
+
 @app.route('/ordenes')
 def ordenes():
     ordenes_pendientes = cola.ver_cola()
