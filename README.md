@@ -49,14 +49,14 @@ python app.py
 
 Archivos relevantes
 ------------------
--  ` app.py ` : Rutas y orquestación del sistema (Flask).
--`models.py`  : Clases` Producto` y ` Orden` .​​​​​
--  ` persistencia.py ` : Lectura/escritura JSON.
--  ` arbol_inventario.py ` : Árbol Binario de Búsqueda para productos.
-- `cola_despacho.py`: Cola de prioridad para órdenes y pila de historial.
-- `mapa_logistico.py`: Grafo y algoritmo de Dijkstra para rutas.
-- `datos/`: JSON de ejemplo (`productos.json`, `ordenes.json`, `mapa.json`).
-- `templates/` y `static/`: Frontend simple usando Jinja2 y CSS.
+-`app.py`: Rutas y orquestación del sistema (Flask).
+-`models.py`: Clases`Producto` y ` Orden` .
+-`persistencia.py`: Lectura/escritura JSON.
+-`arbol_inventario.py`: Árbol Binario de Búsqueda para productos.
+-`cola_despacho.py`: Cola de prioridad para órdenes y pila de historial.
+-`mapa_logistico.py`: Grafo y algoritmo de Dijkstra para rutas.
+-`datos/`: JSON de ejemplo (`productos.json`, `ordenes.json`, `mapa.json`).
+- `templates/` y `static/`: Frontend simples usando Jinja2 y CSS.
 
 Uso y pruebas
 ------------
