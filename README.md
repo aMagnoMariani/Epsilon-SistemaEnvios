@@ -31,7 +31,6 @@ Instalación rápida
 1. Crear y activar un entorno virtual:
 
 ``` bash
-python -m venv .venv
 source .venv/bin/activate
 ```
 

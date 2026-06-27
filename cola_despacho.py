@@ -5,6 +5,7 @@ Cola de prioridad con heapq y pila de historial para operaciones de deshacer.
 
 import heapq
 from models.order import Orden
+from lista_enlazada import ListaDobleEnlazada
 
 
 class ColaDespacho:
@@ -17,7 +18,7 @@ class ColaDespacho:
     def __init__(self):
         self._cola = []           # Cola de prioridad (heap)
         self._contador = 0        # Desempate para heapq (FIFO en misma prioridad)
-        self.pila_historial = []  # Pila para deshacer despachos
+        self.pila_historial = ListaDobleEnlazada[Orden]()  # Historial usando ListaDobleEnlazada LIFO
 
     def agregar_orden(self, orden: Orden) -> None:
         """Agrega (Enqueue) una orden a la cola de prioridad.
@@ -55,8 +56,8 @@ class ColaDespacho:
             return None
 
         prioridad, _, orden = heapq.heappop(self._cola)
-        # Guardar en la pila de historial (Push LIFO)
-        self.pila_historial.append(orden)
+        # Guardar en la pila de historial (insertar al final de la ListaDobleEnlazada)
+        self.pila_historial.insertar_final(orden)
         return orden
 
     def deshacer_ultimo_despacho(self) -> Orden:
@@ -65,18 +66,18 @@ class ColaDespacho:
         Saca el último elemento insertado en la pila de historial y lo vuelve 
         a encolar (Enqueue) en la cola de prioridad.
         
-        Operación: Pop de la pila LIFO y Enqueue en la cola de prioridad.
-        Limitación: Pop de una lista en Python es O(1), pero la posterior
+        Operación: Pop de la pila LIFO (usando eliminar_ultimo) y Enqueue en la cola de prioridad.
+        Limitación: Eliminar el último de nuestra ListaDobleEnlazada es O(1), pero la posterior
         inserción en el heap es O(log N). Depende del tamaño de la cola actual.
         
         Returns:
             La última Orden despachada, o None si no hay historial.
         """
-        if not self.pila_historial:
+        if len(self.pila_historial) == 0:
             return None
 
         # Pop de la pila
-        orden = self.pila_historial.pop()
+        orden = self.pila_historial.eliminar_ultimo()
         # Reinsertarla en la cola (Enqueue)
         self.agregar_orden(orden)
         return orden
@@ -97,7 +98,7 @@ class ColaDespacho:
         Returns:
             Lista de objetos Orden despachados.
         """
-        return list(self.pila_historial)
+        return self.pila_historial.to_list()
 
     @property
     def pendientes(self) -> int:

@@ -32,22 +32,33 @@ Este documento explica las estructuras de datos y las funciones principales usad
 ### Colas y Pilas — `cola_despacho.py`
 - Estructura principal: Cola de prioridad implementada con `heapq`.
   - Tupla almacenada: `(prioridad, contador, orden)` — `contador` evita reordenamiento no determinista entre elementos con la misma prioridad.
-- Pila de historial (`pila_historial`): lista usada como LIFO para almacenar órdenes despachadas y permitir `deshacer`.
+- Pila de historial (`pila_historial`): Lista doblemente enlazada (`ListaDobleEnlazada`) usada como LIFO para almacenar órdenes despachadas y permitir `deshacer` de forma óptima.
 - Propósito:
   - Asegurar que órdenes `Express` (prioridad 0) sean procesadas antes que `Normal` (1).
   - Permitir revertir el último despacho restaurando la orden a la cola y el stock.
 - Funciones clave:
   - `agregar_orden(orden)` — Encola una orden con su prioridad.
-  - `despachar_siguiente()` — Extrae la orden más urgente y la guarda en la pila de historial.
-  - `deshacer_ultimo_despacho()` — Saca la última orden despachada de la pila y la reinyecta en la cola.
+  - `despachar_siguiente()` — Extrae la orden más urgente de la cola de prioridad y la inserta al final de la lista doblemente enlazada (operación de empuje en la pila).
+  - `deshacer_ultimo_despacho()` — Remueve el último elemento de la lista doblemente enlazada (operación LIFO pop) y lo vuelve a encolar en la cola de prioridad.
   - `ver_cola()` — Devuelve listado de órdenes pendientes ordenadas por prioridad.
 
 
-### Listas y Diccionarios (listas, arrays y hashing implícito)
-- Uso general: Python `list` y `dict` en todo el proyecto.
-  - `list` para colecciones ordenadas, resultados de recorridos, historial, etc.
-  - `dict` (hash table interno de Python) para estructuras de adyacencia del grafo y para mapas rápidos `id -> objeto` cuando es necesario.
-- Propósito: almacenamiento dinámico, retorno de datos a plantillas y serialización JSON.
+### Listas Enlazadas (Personalizadas) — `lista_enlazada.py`
+- Estructura: Lista Doblemente Enlazada (`ListaDobleEnlazada` que gestiona nodos `NodoDoble`).
+- Propósito: Proveer una estructura lineal dinámica personalizada para el historial de despachos del operador, garantizando inserción y eliminación eficientes en los extremos en $O(1)$.
+- Operaciones soportadas y limitaciones (lo que NO hace):
+  - `insertar_inicio(dato)` / `insertar_final(dato)`: Inserta un elemento en la cabeza o cola en $O(1)$. *No realiza ordenamiento del dato ni valida si está duplicado.*
+  - `eliminar_inicio()` / `eliminar_ultimo()`: Remueve y retorna el elemento en la cabeza o cola en $O(1)$. *No lanza excepciones si la lista está vacía (retorna None).*
+  - `eliminar(dato)`: Busca secuencialmente y elimina la primera aparición del dato en $O(N)$. *No elimina todas las apariciones ni funciona en $O(1)$.*
+  - `buscar(criterio)`: Busca el primer elemento que cumpla la función de criterio en $O(N)$. *No soporta búsqueda binaria ya que carece de acceso por índice en $O(1)$ (acceso aleatorio).*
+  - `recorrer_adelante()` / `recorrer_atras()`: Generadores para iteración directa o inversa. *No permiten la modificación segura de la estructura durante la iteración.*
+
+
+### Listas y Diccionarios (Estructuras nativas de Python)
+- Uso general: Python `list` y `dict` en el resto del proyecto.
+  - `list` para colecciones secuenciales nativas, retorno a plantillas y manipulación temporal.
+  - `dict` (hash table interna) para representar las adyacencias del grafo de transporte y el mapeo de coordenadas.
+- Propósito: Almacenamiento dinámico nativo y facilidad de serialización a JSON.
 
 
 ### Grafos y Dijkstra — `mapa_logistico.py`
