@@ -11,6 +11,7 @@ class NodoBST:
     
     Contiene un objeto Producto y punteros al hijo izquierdo y derecho.
     """
+    """El uso de slots optimiza el uso de la memoria."""
     __slots__ = ['producto', 'izquierdo', 'derecho']
 
     def __init__(self, producto: Producto):
@@ -60,7 +61,8 @@ class ArbolInventario:
             nodo.producto = producto
 
     def buscar(self, id: int) -> Producto:
-        """Busca un producto por su ID en el árbol.
+        """Busca un producto por su ID en el árbol. Es una busqueda eficiente porque descarta
+        la mitad de las opciones en cada paso.
         
         Args:
             id: ID del producto a buscar.
@@ -123,6 +125,7 @@ class ArbolInventario:
 
     def obtener_todos(self) -> list:
         """Recorrido inorden del árbol. Retorna todos los productos ordenados por ID.
+        Permite obtener una lista con los productos de menor a mayor segun su ID.
         
         Returns:
             Lista de objetos Producto en orden ascendente de ID.
@@ -145,3 +148,7 @@ class ArbolInventario:
 
     def __len__(self):
         return self._tamano
+
+"""El arbol binario implementado en el codigo ya es suficiente para realizar las busquedas, no es necesaria la
+implementacion de un arbol AVL ya que estos tienen un nivel de complejidad matematica que añade mucho codigo
+y aumenta el riesgo de errores sin aportar beneficio visible a la interfaz web.
