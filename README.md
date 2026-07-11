@@ -4,8 +4,7 @@ SistemaEnvios — Epsilon_UDO
 
 Descripción
 -----------
-Epsilon_UDO es una aplicación educativa y funcional para gestionar inventario y despachos en una operación de última milla. Implementa estructuras de datos y algoritmos comunes (árboles binarios de búsqueda, colas de prioridad, pilas, grafos y Dijkstra) para ofrecer:
-
+Epsilon_UDO es una aplicación educativa y funcional para gestionar inventario y despachos en una operación de última milla. Implementa estructuras de datos y algoritmos comunes (árboles B / 2-3, colas de prioridad, pilas, grafos y Dijkstra) para ofrecer:
 - Búsqueda eficiente de productos por ID.
 - Cola de despacho con prioridad (Express vs Normal) y posibilidad de deshacer el último despacho.
 - Cálculo de rutas óptimas según costo de combustible o tiempo usando un grafo ponderado.
@@ -51,7 +50,7 @@ Archivos relevantes
 -`app.py`: Rutas y orquestación del sistema (Flask).
 -`models.py`: Clases`Producto` y ` Orden` .
 -`persistencia.py`: Lectura/escritura JSON.
--`arbol_inventario.py`: Árbol Binario de Búsqueda para productos.
+-`arbol_inventario.py` e `arbol_b.py`: Árbol B (configurado como Árbol 2-3) para productos.
 -`cola_despacho.py`: Cola de prioridad para órdenes y pila de historial.
 -`mapa_logistico.py`: Grafo y algoritmo de Dijkstra para rutas.
 -`datos/`: JSON de ejemplo (`productos.json`, `ordenes.json`, `mapa.json`).

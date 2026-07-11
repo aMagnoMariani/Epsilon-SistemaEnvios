@@ -17,16 +17,19 @@ Este documento explica las estructuras de datos y las funciones principales usad
 
 ## Estructuras y su propósito
 
-### Árboles (BST) — `arbol_inventario.py`
-- Estructura: Árbol Binario de Búsqueda (NodoBST + ArbolInventario).
-- Propósito: Permitir búsquedas, inserciones y actualizaciones de `Producto` por `id` en tiempo promedio O(log n) si el árbol está balanceado (aquí es un BST simple).
+### Árboles B / 2-3 — `arbol_inventario.py` e `arbol_b.py`
+- Estructura: Árbol B de Orden M (NodoB + ArbolB, configurado con M=3 para actuar como Árbol 2-3).
+- Propósito: Permitir búsquedas, inserciones y actualizaciones de `Producto` por `id` en tiempo garantizado de $O(\log n)$ en el peor caso gracias a su propiedad auto-balanceada.
 - Funciones clave:
-  - `insertar(producto)` — Inserta o reemplaza un `Producto` según su `id`.
+  - `insertar(producto)` — Inserta un `Producto` según su `id` o lo actualiza si ya existe. Divide nodos hacia arriba de manera recursiva si se supera el límite de llaves (M-1).
   - `buscar(id)` — Busca y retorna el `Producto` con ese `id` o `None`.
   - `actualizar_stock(id, cantidad)` — Resta cantidad del stock (verifica disponibilidad).
   - `restaurar_stock(id, cantidad)` — Restaura stock (para "deshacer" despachos).
-  - `obtener_todos()` — Recorrido inorden que devuelve los productos ordenados por `id`.
-- Notas: Para grandes volúmenes y búsquedas altamente balanceadas considerar reemplazar por un árbol balanceado (AVL/Red-Black) o usar bases de datos.
+  - `obtener_todos()` — Recorrido inorden que devuelve los productos ordenados ascendentemente por `id`.
+- Notas de diseño (Limitaciones):
+  - Inserción y búsqueda balanceada implementada.
+  - No implementa la operación de eliminación de nodos ni fusión/redistribución automática de nodos asociados a underflow en la eliminación.
+
 
 
 ### Colas y Pilas — `cola_despacho.py`
