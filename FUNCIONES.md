@@ -131,12 +131,3 @@ from mapa_logistico import MapaLogistico
 mapa = MapaLogistico('datos/mapa.json')
 costo, camino, detalles = mapa.calcular_ruta('Almacen_Central', 'Sector_B', 'gasolina')
 ```
-
----
-
-Si quieres, puedo:
-- Añadir diagramas (Mermaid) que muestren la relación entre módulos.
-- Extender `FUNCIONES.md` con ejemplos más detallados por función y fragmentos de prueba (`pytest`).
-- Crear `requirements-dev.txt` y configurar `pre-commit`.
-
-Indica qué prefieres que haga a continuación.
