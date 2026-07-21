@@ -15,7 +15,8 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
-# Create Flask app pointing to root templates/static so render_template finds files in project root
+# Crea una aplicación Flask configurada para utilizar las carpetas raíz `templates/` y `static/`, de modo que `render_template` 
+# encuentre los archivos en la raíz del proyecto.
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 app.secret_key = 'logistica-ultima-milla-2026'
 
