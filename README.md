@@ -1,4 +1,4 @@
-# Epsilon_UDO — Sistema de Logística de Última Milla
+# Epsilon_UDO — SistemaEnvios
 
 Aplicación educativa y funcional para gestionar inventario y despachos en Maturín, Estado Monagas, Venezuela. Implementa estructuras de datos y algoritmos fundamentales (Árbol B / 2-3, Cola de Prioridad, Pila, Lista Doblemente Enlazada, Tabla Hash, Grafo + Dijkstra con datos viales reales de OpenStreetMap) con mapa 100% offline y rutas sobre calles reales.
 
