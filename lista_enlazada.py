@@ -1,7 +1,6 @@
 """
-Módulo de Lista Enlazada Doble — Unidad III / Estructura personalizada
-Implementación de una lista doblemente enlazada para almacenar y gestionar
-el historial de despachos u otros datos en la aplicación.
+Módulo de Lista Doblemente Enlazada — Nodos con punteros anterior/siguiente.
+Operaciones en extremos O(1), búsqueda O(n). Usa genéricos (TypeVar).
 """
 
 from typing import TypeVar, Generic, Optional, Generator, Callable

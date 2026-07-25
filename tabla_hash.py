@@ -1,25 +1,6 @@
 """
-Módulo Tabla Hash — Unidad III
-Implementación de tabla hash con resolución de colisiones por encadenamiento (chaining).
-
-REPRESENTACIÓN ELEGIDA:
-- Se utiliza una lista de listas (buckets) donde cada bucket contiene pares clave-valor.
-- Esta representación permite manejar colisiones de manera eficiente mediante encadenamiento.
-- Cada posición de la tabla es una lista que puede contener múltiples elementos con el mismo hash.
-
-FUNCIÓN HASH:
-- Se utiliza la función hash() nativa de Python combinada con módulo para mapear claves a índices.
-- Para claves numéricas (como IDs de productos), el hash es directo: hash(clave) % capacidad.
-- Para claves string, Python's hash() genera un valor numérico que luego se reduce con módulo.
-
-LIMITACIONES Y RESOLUCIÓN DE COLISIONES:
-- COLISIONES: Ocurren cuando dos claves diferentes producen el mismo índice después de aplicar la función hash.
-- RESOLUCIÓN: Se usa encadenamiento (chaining) con listas. Cada bucket puede contener múltiples elementos.
-- FACTOR DE CARGA: Cuando el número de elementos supera el 75% de la capacidad, se redimensiona la tabla.
-- COMPLEJIDAD:
-  - Mejor caso: O(1) - acceso directo sin colisiones
-  - Peor caso: O(n) - todas las claves colisionan en el mismo bucket
-  - Caso promedio: O(1) con buen factor de carga y función hash distribuida
+Módulo Tabla Hash — Encadenamiento (chaining) con redimensionamiento automático.
+Búsqueda O(1) promedio, O(n) peor caso. Factor de carga máximo 75%.
 """
 
 from typing import Any, Optional, List, Tuple
@@ -219,72 +200,4 @@ class TablaHash:
         return "\n".join(resultado) if resultado else "Tabla vacía"
 
 
-# ============================================
-# EJEMPLO DE USO Y PRUEBAS
-# ============================================
 
-if __name__ == "__main__":
-    print("=" * 60)
-    print("PRUEBAS DE TABLA HASH")
-    print("=" * 60)
-    
-    # Crear tabla hash
-    tabla = TablaHash(capacidad_inicial=5)
-    
-    # Insertar elementos
-    print("\n1. Insertando elementos...")
-    tabla.insertar(1, "Producto A")
-    tabla.insertar(2, "Producto B")
-    tabla.insertar(3, "Producto C")
-    tabla.insertar(11, "Producto AA")  # Colisionará con 1 (hash(1) % 5 == hash(11) % 5)
-    tabla.insertar("nombre", "Producto D")
-    
-    print(f"Elementos insertados: {len(tabla)}")
-    print(f"Capacidad actual: {tabla.capacidad}")
-    
-    # Buscar elementos
-    print("\n2. Buscando elementos...")
-    print(f"Buscar clave 1: {tabla.buscar(1)}")
-    print(f"Buscar clave 11: {tabla.buscar(11)}")
-    print(f"Buscar clave 'nombre': {tabla.buscar('nombre')}")
-    print(f"Buscar clave 99: {tabla.buscar(99)}")  # No existe
-    
-    # Verificar existencia
-    print("\n3. Verificando existencia...")
-    print(f"Existe clave 2: {tabla.existe(2)}")
-    print(f"Existe clave 99: {tabla.existe(99)}")
-    
-    # Actualizar valor
-    print("\n4. Actualizando valor...")
-    tabla.insertar(1, "Producto A Actualizado")
-    print(f"Buscar clave 1 después de actualizar: {tabla.buscar(1)}")
-    
-    # Eliminar elemento
-    print("\n5. Eliminando elemento...")
-    eliminado = tabla.eliminar(2)
-    print(f"¿Se eliminó clave 2? {eliminado}")
-    print(f"Buscar clave 2 después de eliminar: {tabla.buscar(2)}")
-    
-    # Mostrar estado de la tabla
-    print("\n6. Estado de la tabla:")
-    print(tabla)
-    
-    # Obtener todos los elementos
-    print("\n7. Todos los elementos:")
-    for clave, valor in tabla.obtener_todos():
-        print(f"  {clave}: {valor}")
-    
-    # Prueba de redimensionamiento
-    print("\n8. Prueba de redimensionamiento...")
-    tabla_pequena = TablaHash(capacidad_inicial=3)
-    print(f"Capacidad inicial: {tabla_pequena.capacidad}")
-    
-    for i in range(10):
-        tabla_pequena.insertar(i, f"Valor {i}")
-    
-    print(f"Capacidad después de insertar 10 elementos: {tabla_pequena.capacidad}")
-    print(f"Elementos totales: {len(tabla_pequena)}")
-    
-    print("\n" + "=" * 60)
-    print("PRUEBAS COMPLETADAS")
-    print("=" * 60)

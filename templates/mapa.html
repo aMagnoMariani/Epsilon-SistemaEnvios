@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Mapa Logístico{% endblock %}
+{% block title %}Mapa Logístico — Maturín{% endblock %}
 
 {% block head %}
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-<!-- Leaflet Routing Machine CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin=""/>
+<link rel="stylesheet" href="{{ url_for('static', filename='leaflet/leaflet.css') }}"/>
 {% endblock %}
 
 {% block content %}
 
-<!-- Overlay: Formularios Flotantes (Top Left) -->
 <div class="map-overlay">
     <h3>Calculador de Rutas</h3>
     <form action="{{ url_for('calcular_ruta_mapa') }}" method="POST">
@@ -25,7 +21,7 @@
                 {% endfor %}
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="destino">Destino de Entrega</label>
             <select name="destino" id="destino-mapa" class="input-field" required>
@@ -39,141 +35,167 @@
         </div>
 
         <div class="form-group">
-            <label>Estrategia Logística</label>
+            <label>Estrategia</label>
             <div class="strategy-options">
-                <label class="strategy-option {% if not estrategia_seleccionada or estrategia_seleccionada == 'gasolina' %}active{% endif %}">
+                <label class="strategy-option strategy-option-gas {% if not estrategia_seleccionada or estrategia_seleccionada == 'gasolina' %}active{% endif %}" id="opt-gas">
                     <input type="radio" name="estrategia" value="gasolina" {% if not estrategia_seleccionada or estrategia_seleccionada == 'gasolina' %}checked{% endif %}>
-                    <span class="strategy-text">Ahorro de gasolina</span>
+                    <span class="strategy-radio-icon">⛽</span>
+                    <div class="strategy-radio-content">
+                        <span class="strategy-radio-label">Ahorro de gasolina</span>
+                        <span class="strategy-radio-desc">Paradas en sectores cercanos — menor consumo</span>
+                    </div>
                 </label>
-                <label class="strategy-option {% if estrategia_seleccionada == 'tiempo' %}active{% endif %}">
+                <label class="strategy-option strategy-option-time {% if estrategia_seleccionada == 'tiempo' %}active{% endif %}" id="opt-time">
                     <input type="radio" name="estrategia" value="tiempo" {% if estrategia_seleccionada == 'tiempo' %}checked{% endif %}>
-                    <span class="strategy-text">Ruta más rápida</span>
+                    <span class="strategy-radio-icon">⚡</span>
+                    <div class="strategy-radio-content">
+                        <span class="strategy-radio-label">Ruta más rápida</span>
+                        <span class="strategy-radio-desc">Trayecto directo sin paradas — menor tiempo</span>
+                    </div>
                 </label>
             </div>
         </div>
 
-        <div class="strategy-help">
-            <div class="strategy-badge strategy-economy">Ahorro de gasolina</div>
-            <div class="strategy-badge strategy-fast">Ruta directa</div>
-            <p>
-                {% if estrategia_seleccionada == 'tiempo' %}
-                    Se calcula una ruta directa sin paradas intermedias entre origen y destino.
-                {% else %}
-                    Se calcula una ruta económica con paradas solo cuando son necesarias para reducir combustible.
-                {% endif %}
-            </p>
-        </div>
-
         <button type="submit" class="btn btn-primary btn-full" style="margin-top: 10px;">
-            Encontrar Ruta Óptima
+            Calcular Ruta
         </button>
     </form>
 </div>
 
-<!-- Toast: Resultados (Top Right) -->
+<div class="map-overlay map-overlay-right" id="add-node-panel" style="display: none;">
+    <h3>Agregar Nuevo Sector</h3>
+    <p id="new-node-coords" style="font-size:0.8rem;color:#555;margin-bottom:8px;"></p>
+    <form id="add-node-form">
+        <div class="form-group">
+            <label for="new-node-name">Nombre del Sector</label>
+            <input type="text" id="new-node-name" class="input-field" placeholder="Ej: Sector_I" required>
+        </div>
+        <div class="form-group">
+            <label for="new-node-connect">Conectar con</label>
+            <select id="new-node-connect" class="input-field">
+                <option value="auto">Automático (más cercano)</option>
+                {% for nodo in nodos %}
+                <option value="{{ nodo }}">{{ nodo|replace('_', ' ') }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top: 8px; background: #0F9D58;">
+            Agregar Sector
+        </button>
+        <button type="button" id="cancel-add-node" class="btn btn-full" style="margin-top:4px;background:#D5D9D9;color:#232F3E;">
+            Cancelar
+        </button>
+    </form>
+    <div id="add-node-result" style="margin-top:8px;font-size:0.85rem;"></div>
+</div>
+
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
-            <div class="map-result-toast" style="transition: opacity 0.4s;">
-                <h4 style="margin-bottom: 5px; color: var(--amazon-navy);">Aviso del Sistema</h4>
+            <div class="map-result-toast" id="result-toast">
+                <h4 style="margin-bottom: 5px; color: var(--amazon-navy);">Resultado</h4>
                 <p style="font-size: 0.9rem;">{{ message }}</p>
-                {% if ruta_camino is defined and ruta_camino %}
-                <div style="margin-top: 10px; font-size: 0.85rem; padding: 10px; background: #f3f3f3; border-radius: 4px;">
-                    <strong>Costo Total:</strong> {{ ruta_costo }} {{ 'unidades' if estrategia_seleccionada == 'gasolina' else 'minutos' }}
-                </div>
-                {% endif %}
             </div>
         {% endfor %}
     {% endif %}
 {% endwith %}
 
-<!-- El Mapa -->
+{% if ruta_waypoints and ruta_waypoints|length > 1 %}
+<div class="route-info-panel">
+    <div class="route-info-header">
+        <span class="route-info-icon">
+            {% if estrategia_seleccionada == 'tiempo' %}⚡{% else %}⛽{% endif %}
+        </span>
+        <span class="route-info-title">
+            {% if estrategia_seleccionada == 'tiempo' %}Ruta más rápida{% else %}Ahorro de gasolina{% endif %}
+        </span>
+    </div>
+    <div class="route-info-cost">
+        <strong>{{ ruta_costo }}</strong> {{ 'minutos' if estrategia_seleccionada == 'tiempo' else 'unidades' }}
+        &nbsp;·&nbsp; {{ ruta_waypoints|length }} puntos sobre calles
+    </div>
+    {% if ruta_detalles %}
+    <div class="route-info-calles">
+        <strong>Calles:</strong>
+        {% set calles_vistas = [] %}
+        {% for d in ruta_detalles %}
+            {% if d.descripcion and d.descripcion not in calles_vistas %}
+                {% set _ = calles_vistas.append(d.descripcion) %}
+            {% endif %}
+        {% endfor %}
+        {{ calles_vistas[:8]|join(' → ') }}{% if calles_vistas|length > 8 %}...{% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
 <div id="map"></div>
 
 {% endblock %}
 
 {% block scripts %}
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js" crossorigin=""></script>
+<script src="{{ url_for('static', filename='leaflet/leaflet.js') }}"></script>
 <script>
+L.Icon.Default.imagePath = '{{ url_for("static", filename="leaflet/images/") }}';
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar mapa centrado en Maturín, Estado Monagas
-    var map = L.map('map', {zoomControl: false}).setView([9.7456, -63.1832], 13);
-    
-    // Mover el control de zoom abajo a la derecha
+    var map = L.map('map', {zoomControl: false}).setView([9.7456, -63.1832], 14);
     L.control.zoom({position: 'bottomright'}).addTo(map);
 
-    // Mapa base limpio de Carto
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 20
+    L.tileLayer('/static/tiles/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap | Mapa offline Maturín',
+        maxZoom: 16, minZoom: 13, maxNativeZoom: 16, tileSize: 256,
+        errorTileUrl: '', bounds: [[9.6, -63.35], [9.9, -63.0]]
     }).addTo(map);
 
     const nodos = {{ nodos | tojson }};
     const coordenadas = {{ coordenadas | tojson }};
     const aristas = {{ aristas | tojson }};
     const productos = {{ productos | default([]) | tojson | safe }};
-    const rutaCamino = {{ ruta_camino | default([]) | tojson }};
+    const rutaWaypoints = {{ ruta_waypoints | default([]) | tojson }};
     const estrategia = "{{ estrategia_seleccionada or 'gasolina' }}";
-    
-    function isInRoute(from, to) {
-        if (!rutaCamino || rutaCamino.length === 0) return false;
-        for (let i = 0; i < rutaCamino.length - 1; i++) {
-            if ((rutaCamino[i] === from && rutaCamino[i+1] === to) ||
-                (rutaCamino[i] === to && rutaCamino[i+1] === from)) {
-                return true;
-            }
-        }
-        return false;
+
+    function toLeafletLatLngs(pts) {
+        if (!pts || pts.length === 0) return [];
+        return pts.map(function(w) { return [w.lat, w.lng]; });
     }
 
-    // Dibujar líneas de referencia del grafo
-    aristas.forEach(arista => {
-        const p1 = coordenadas[arista.origen];
-        const p2 = coordenadas[arista.destino];
-        if (p1 && p2) {
-            const isRoute = isInRoute(arista.origen, arista.destino);
-            const color = isRoute ? (estrategia === 'tiempo' ? '#6D28D9' : '#0F9D58') : '#D5D9D9';
-            const weight = isRoute ? 4 : 2;
-            const opacity = isRoute ? 0.95 : 0.55;
-
-            const polyline = L.polyline([[p1.lat, p1.lng], [p2.lat, p2.lng]], {
-                color: color,
-                weight: weight,
-                opacity: opacity,
-                dashArray: isRoute ? null : '6, 8'
-            }).addTo(map);
-
-            polyline.bindTooltip(`${arista.costo_gasolina} | ${arista.tiempo}m`, {
-                className: 'minimal-tooltip', sticky: true
-            });
+    aristas.forEach(function(arista) {
+        var pts = [[coordenadas[arista.origen].lat, coordenadas[arista.origen].lng]];
+        if (arista.waypoints && arista.waypoints.length > 0) {
+            arista.waypoints.forEach(function(w) { pts.push([w.lat, w.lng]); });
         }
+        pts.push([coordenadas[arista.destino].lat, coordenadas[arista.destino].lng]);
+        L.polyline(pts, {
+            color: '#D5D9D9', weight: 1.5, opacity: 0.4,
+            smoothFactor: 1.5, dashArray: '6, 8'
+        }).addTo(map);
     });
 
-    let productOptions = '';
-    productos.forEach(p => {
-        productOptions += `<option value="${p.id}">${p.nombre} ($${p.precio})</option>`;
+    if (rutaWaypoints && rutaWaypoints.length > 1) {
+        var color = estrategia === 'tiempo' ? '#6D28D9' : '#0F9D58';
+        var pts = toLeafletLatLngs(rutaWaypoints);
+        L.polyline(pts, {
+            color: color, weight: 5, opacity: 0.9, smoothFactor: 1.5
+        }).addTo(map);
+        map.fitBounds(L.latLngBounds(pts).pad(0.12));
+    }
+
+    var productOptions = '';
+    productos.forEach(function(p) {
+        productOptions += '<option value="' + p.id + '">' + p.nombre + ' ($' + p.precio + ')</option>';
     });
 
-    // Dibujar marcadores de nodos
-    nodos.forEach(nodo => {
-        const pos = coordenadas[nodo];
+    nodos.forEach(function(nodo) {
+        var pos = coordenadas[nodo];
         if (!pos) return;
+        var isAlmacen = (nodo === 'Almacen_Central');
 
-        const isAlmacen = (nodo === 'Almacen_Central');
-        const inRoute = rutaCamino.includes(nodo);
-        
-        const markerColor = isAlmacen ? '#232F3E' : (inRoute ? '#007185' : '#FFFFFF');
-        const borderColor = isAlmacen ? '#131A22' : (inRoute ? '#007185' : '#0492c2');
-        
-        const circle = L.circleMarker([pos.lat, pos.lng], {
+        var circle = L.circleMarker([pos.lat, pos.lng], {
             radius: isAlmacen ? 11 : 8,
-            fillColor: markerColor,
-            color: borderColor,
-            weight: 3,
-            opacity: 1,
-            fillOpacity: 1
+            fillColor: isAlmacen ? '#232F3E' : '#FFFFFF',
+            color: isAlmacen ? '#131A22' : '#0492c2',
+            weight: 3, opacity: 1, fillOpacity: 1
         }).addTo(map);
 
         circle.bindTooltip(nodo.replace('_', ' '), {
@@ -182,64 +204,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (!isAlmacen) {
-            const popupContent = `
-                <div class="buy-box-popup">
-                    <h4>Destino: ${nodo.replace('_', ' ')}</h4>
-                    <form action="/ordenes/nueva" method="POST">
-                        <input type="hidden" name="destino" value="${nodo}">
-                        
-                        <label>Producto a Despachar:</label>
-                        <select name="producto_id" required>
-                            <option value="">Seleccione...</option>
-                            ${productOptions}
-                        </select>
-
-                        <div style="display: flex; gap: 10px;">
-                            <div style="flex: 1;">
-                                <label>Cantidad:</label>
-                                <input type="number" name="cantidad" value="1" min="1" required>
-                            </div>
-                            <div style="flex: 1;">
-                                <label>Prioridad:</label>
-                                <select name="prioridad">
-                                    <option value="1">Normal</option>
-                                    <option value="0">Express</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-buy">Agregar al Carrito de Envío</button>
-                    </form>
-                </div>
-            `;
-            circle.bindPopup(popupContent, { maxWidth: 320 });
+            circle.bindPopup(
+                '<div class="buy-box-popup">' +
+                '<h4>Destino: ' + nodo.replace('_', ' ') + '</h4>' +
+                '<form action="/ordenes/nueva" method="POST">' +
+                '<input type="hidden" name="destino" value="' + nodo + '">' +
+                '<label>Producto:</label>' +
+                '<select name="producto_id" required><option value="">Seleccione...</option>' +
+                productOptions +
+                '</select>' +
+                '<div style="display:flex;gap:10px;">' +
+                '<div style="flex:1;"><label>Cantidad:</label><input type="number" name="cantidad" value="1" min="1" required></div>' +
+                '<div style="flex:1;"><label>Prioridad:</label><select name="prioridad"><option value="1">Normal</option><option value="0">Express</option></select></div>' +
+                '</div><button type="submit" class="btn-buy">Agregar al Carrito de Envío</button>' +
+                '</form></div>', { maxWidth: 320 }
+            );
         } else {
             circle.bindPopup("<div style='padding:5px;'><strong>Almacén Central</strong><br>Punto base de operaciones en Maturín.</div>");
         }
     });
 
-    if (rutaCamino && rutaCamino.length > 1) {
-        const waypoints = rutaCamino.map(n => L.latLng(coordenadas[n].lat, coordenadas[n].lng));
-        const routingControl = L.Routing.control({
-            router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' }),
-            show: false,
-            addWaypoints: false,
-            routeWhileDragging: false,
-            fitSelectedRoutes: false,
-            createMarker: () => null,
-            lineOptions: {
-                styles: [{ color: estrategia === 'tiempo' ? '#6D28D9' : '#0F9D58', opacity: 0.95, weight: 7 }],
-                addWaypoints: false
-            }
-        }).addTo(map);
-        routingControl.setWaypoints(waypoints);
-    }
+    var optGas = document.getElementById('opt-gas');
+    var optTime = document.getElementById('opt-time');
+    var radioGas = optGas.querySelector('input');
+    var radioTime = optTime.querySelector('input');
 
-    if (rutaCamino && rutaCamino.length > 0) {
-        const routeCoords = rutaCamino.map(n => [coordenadas[n].lat, coordenadas[n].lng]);
-        const bounds = L.latLngBounds(routeCoords);
-        map.fitBounds(bounds, { paddingBottomRight: [50, 50], paddingTopLeft: [350, 50] });
-    }
+    optGas.addEventListener('click', function() {
+        optGas.classList.add('active'); optTime.classList.remove('active');
+        radioGas.checked = true;
+    });
+    optTime.addEventListener('click', function() {
+        optTime.classList.add('active'); optGas.classList.remove('active');
+        radioTime.checked = true;
+    });
+
+    var selectedLatLng = null, tempMarker = null;
+
+    map.on('click', function(e) {
+        if (tempMarker) map.removeLayer(tempMarker);
+        selectedLatLng = e.latlng;
+        tempMarker = L.marker(e.latlng, {
+            icon: L.divIcon({
+                className: 'temp-marker-icon',
+                html: '<div style="width:20px;height:20px;background:#E63946;border:3px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(0,0,0,0.4);"></div>',
+                iconSize: [20,20], iconAnchor: [10,10]
+            })
+        }).addTo(map);
+        tempMarker.bindTooltip('Nuevo sector aquí', {
+            permanent: true, direction: 'top', className: 'temp-node-label'
+        }).openTooltip();
+        document.getElementById('add-node-panel').style.display = 'block';
+        document.getElementById('new-node-coords').textContent =
+            'Coordenadas: ' + e.latlng.lat.toFixed(6) + ', ' + e.latlng.lng.toFixed(6);
+    });
+
+    document.getElementById('cancel-add-node').addEventListener('click', function() {
+        if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+        selectedLatLng = null;
+        document.getElementById('add-node-panel').style.display = 'none';
+        document.getElementById('add-node-result').textContent = '';
+        document.getElementById('new-node-name').value = '';
+    });
+
+    document.getElementById('add-node-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var nodeName = document.getElementById('new-node-name').value.trim();
+        var connectTo = document.getElementById('new-node-connect').value;
+        if (!nodeName || !selectedLatLng) return;
+        var resultDiv = document.getElementById('add-node-result');
+        resultDiv.textContent = 'Agregando sector...';
+        fetch('/mapa/nodo/nuevo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                nombre: nodeName,
+                lat: selectedLatLng.lat,
+                lng: selectedLatLng.lng,
+                conectar_con: connectTo !== 'auto' ? connectTo : null
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                resultDiv.innerHTML = '<span style="color:#0F9D58;">Sector <strong>' + nodeName +
+                    '</strong> agregado.<br><small>Ya puedes calcular rutas hacia él.</small></span>';
+                setTimeout(function() { location.reload(); }, 1200);
+            } else {
+                resultDiv.innerHTML = '<span style="color:#E63946;">Error: ' + (data.error || 'No se pudo') + '</span>';
+            }
+        })
+        .catch(function() { resultDiv.innerHTML = '<span style="color:#E63946;">Error de conexión.</span>'; });
+    });
+
+    var toast = document.getElementById('result-toast');
+    if (toast) { setTimeout(function() { toast.style.opacity = '0'; }, 8000); }
 });
 </script>
 <style>
@@ -248,13 +306,38 @@ document.addEventListener('DOMContentLoaded', function() {
         border: 1px solid rgba(255,255,255,0.75);
         box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         color: var(--amazon-navy);
-        font-weight: 700;
-        font-size: 0.82rem;
-        padding: 4px 10px;
-        border-radius: 8px;
+        font-weight: 700; font-size: 0.82rem;
+        padding: 4px 10px; border-radius: 8px;
     }
-    .leaflet-tooltip-bottom:before {
-        border-bottom-color: rgba(255,255,255,0.75);
+    .leaflet-tooltip-bottom:before { border-bottom-color: rgba(255,255,255,0.75); }
+    .temp-node-label {
+        background: rgba(230,57,70,0.95) !important;
+        border: 1px solid rgba(230,57,70,0.9) !important;
+        color: #fff !important; font-weight: 700; font-size: 0.8rem;
+        padding: 3px 8px; border-radius: 6px;
     }
+    .temp-node-label::before { border-top-color: rgba(230,57,70,0.95) !important; }
+    .temp-marker-icon { background: transparent !important; border: none !important; }
+    .buy-box-popup h4 { margin: 0 0 6px 0; font-size: 0.95rem; color: var(--amazon-navy); }
+    .btn-buy {
+        width: 100%; margin-top: 8px; padding: 8px; background: #0492c2;
+        color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer;
+        font-size: 0.9rem; transition: background 0.2s;
+    }
+    .btn-buy:hover { background: #0379a8; }
+    .route-info-panel {
+        position: absolute; bottom: 24px; left: 24px; z-index: 400;
+        background: rgba(255,255,255,0.94); backdrop-filter: blur(12px);
+        padding: 14px 18px; border-radius: 14px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+        border: 1px solid rgba(255,255,255,0.65);
+        max-width: 380px; font-size: 0.85rem;
+    }
+    .route-info-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .route-info-icon { font-size: 1.3rem; }
+    .route-info-title { font-weight: 700; font-size: 0.95rem; color: var(--amazon-navy); }
+    .route-info-cost { color: var(--text-secondary); margin-bottom: 4px; }
+    .route-info-calles { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.4; }
+    .map-overlay-right { right: 24px; left: auto; max-width: 280px; }
 </style>
 {% endblock %}

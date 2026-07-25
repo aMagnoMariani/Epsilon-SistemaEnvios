@@ -1,68 +1,52 @@
-# Epsilon_UDO
+# Epsilon_UDO — Sistema de Logística de Última Milla
 
-SistemaEnvios — Epsilon_UDO
+Aplicación educativa y funcional para gestionar inventario y despachos en Maturín, Estado Monagas, Venezuela. Implementa estructuras de datos y algoritmos fundamentales (Árbol B / 2-3, Cola de Prioridad, Pila, Lista Doblemente Enlazada, Tabla Hash, Grafo + Dijkstra con datos viales reales de OpenStreetMap) con mapa 100% offline y rutas sobre calles reales.
 
-Descripción
------------
-Epsilon_UDO es una aplicación educativa y funcional para gestionar inventario y despachos en una operación de última milla. Implementa estructuras de datos y algoritmos comunes (árboles B / 2-3, colas de prioridad, pilas, grafos y Dijkstra) para ofrecer:
-- Búsqueda eficiente de productos por ID.
-- Cola de despacho con prioridad (Express vs Normal) y posibilidad de deshacer el último despacho.
-- Cálculo de rutas óptimas según costo de combustible o tiempo usando un grafo ponderado.
-- Persistencia simple en JSON para productos, órdenes y mapa.
+## Integrantes
 
-Lenguaje y herramientas
------------------------
-- Lenguaje: Python 3.8+
-- Framework web: Flask
-- Persistencia: JSON (módulo `json`)
-- Recomendadas: `python-dotenv`, `gunicorn` (despliegue)
-
-Integrantes
------------
 - Alejandro Mariani
 - José Félix Cedeño
-- Diana Yegüez
-- Victoria Santodomingo<br>
+- Diana Yeguez
+- Victoria Santodomingo
 - Ariadna Bucarito
 
-Instalación rápida
-------------------
-1. Crear y activar un entorno virtual:
+## Instalación rápida
 
-``` bash
-source .venv/bin/activate
+```bash
+pip install -r requirements.txt --break-system-packages
+python tools/generar_grafo_vial.py    # descargar calles reales
+python tools/download_tiles.py        # descargar tiles offline
+python app.py                         # iniciar en http://localhost:5000
 ```
 
-2. Instalar dependencias:
+## Documentación
 
-``` bash
-pip install -r requirements.txt
+| Documento | Descripción |
+|---|---|
+| [MANUAL_USUARIO.md](MANUAL_USUARIO.md) | Manual de usuario con instrucciones paso a paso |
+| [docs/JUSTIFICACION.md](docs/JUSTIFICACION.md) | Justificación de estructuras no implementadas |
+| [docs/INFORME_FINAL.md](docs/INFORME_FINAL.md) | Informe final del proyecto |
+| [IMPLEMENTACION_GRAFOS_HASH.md](IMPLEMENTACION_GRAFOS_HASH.md) | Detalle técnico de grafo y tabla hash |
+| [FUNCIONES.md](FUNCIONES.md) | Funciones y estructuras por módulo |
+| [docs/PLAN.md](docs/PLAN.md) | Plan original de asignación |
+
+## Estructuras de datos
+
+| Estructura | Archivo | Operaciones | Complejidad |
+|---|---|---|---|
+| Árbol B (2-3) | `arbol_b.py` | Buscar, Insertar | O(log n) |
+| Tabla Hash (chaining) | `tabla_hash.py` | Insertar, Buscar, Eliminar | O(1) promedio |
+| Cola de Prioridad | `cola_despacho.py` | Enqueue, Dequeue | O(log n) |
+| Pila (LIFO) | `lista_enlazada.py` | Push, Pop | O(1) |
+| Lista Doblemente Enlazada | `lista_enlazada.py` | Insertar/Eliminar extremos | O(1) |
+| Grafo + Dijkstra | `mapa_logistico.py` | Ruta más corta, BFS, DFS | O((V+E) log V) |
+
+## Pruebas
+
+```bash
+pytest  # 49 tests unitarios
 ```
 
-3. Iniciar la aplicación en desarrollo:
+## Licencia
 
-``` bash
-python app.py
-```
-
-Archivos relevantes
-------------------
--`app.py`: Rutas y orquestación del sistema (Flask).
--`models.py`: Clases`Producto` y ` Orden` .
--`persistencia.py`: Lectura/escritura JSON.
--`arbol_inventario.py` e `arbol_b.py`: Árbol B (configurado como Árbol 2-3) para productos.
--`cola_despacho.py`: Cola de prioridad para órdenes y pila de historial.
--`mapa_logistico.py`: Grafo y algoritmo de Dijkstra para rutas.
--`datos/`: JSON de ejemplo (`productos.json`, `ordenes.json`, `mapa.json`).
-- `templates/` y `static/`: Frontend simples usando Jinja2 y CSS.
-
-Uso y pruebas
-------------
-- La aplicación expone rutas web (por defecto `http://127.0.0.1:5000/`).
-- Para pruebas unitarias, usar `pytest` (ya incluido en `requirements.txt`).
-
-Contribuciones
---------------
-- Seguir el estilo de código con `black` y habilitar `pre-commit` si se desea.
-- Abrir issues y pull requests indicando el propósito y pruebas realizadas.
-
+Proyecto académico — Universidad de Oriente, Núcleo Monado, 2026.

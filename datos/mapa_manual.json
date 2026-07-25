@@ -1,0 +1,624 @@
+{
+  "nodos": {
+    "Almacen_Central": {
+      "lat": 9.7456,
+      "lng": -63.1832
+    },
+    "Sector_A": {
+      "lat": 9.7532,
+      "lng": -63.1875
+    },
+    "Sector_B": {
+      "lat": 9.744,
+      "lng": -63.171
+    },
+    "Sector_C": {
+      "lat": 9.7365,
+      "lng": -63.1895
+    },
+    "Sector_D": {
+      "lat": 9.7484,
+      "lng": -63.1608
+    },
+    "Sector_E": {
+      "lat": 9.7318,
+      "lng": -63.179
+    },
+    "Sector_F": {
+      "lat": 9.756,
+      "lng": -63.196
+    },
+    "Sector_G": {
+      "lat": 9.742,
+      "lng": -63.2045
+    },
+    "Sector_H": {
+      "lat": 9.7598,
+      "lng": -63.169
+    },
+    "Sector_55": {
+      "lat": 9.749957145627116,
+      "lng": -63.17808151245118
+    }
+  },
+  "aristas": [
+    {
+      "origen": "Almacen_Central",
+      "destino": "Sector_A",
+      "costo_gasolina": 3,
+      "tiempo": 6,
+      "descripcion": "Av. Bolívar hacia el norte, vía Tipuro",
+      "waypoints": [
+        {
+          "lat": 9.7468,
+          "lng": -63.1835
+        },
+        {
+          "lat": 9.748,
+          "lng": -63.184
+        },
+        {
+          "lat": 9.7492,
+          "lng": -63.1846
+        },
+        {
+          "lat": 9.7504,
+          "lng": -63.1854
+        },
+        {
+          "lat": 9.7516,
+          "lng": -63.1864
+        }
+      ]
+    },
+    {
+      "origen": "Almacen_Central",
+      "destino": "Sector_B",
+      "costo_gasolina": 4,
+      "tiempo": 7,
+      "descripcion": "Av. Bella Vista / Alirio Ugarte Pelayo hacia el este",
+      "waypoints": [
+        {
+          "lat": 9.7453,
+          "lng": -63.18
+        },
+        {
+          "lat": 9.745,
+          "lng": -63.1775
+        },
+        {
+          "lat": 9.7448,
+          "lng": -63.1753
+        },
+        {
+          "lat": 9.7445,
+          "lng": -63.1733
+        }
+      ]
+    },
+    {
+      "origen": "Almacen_Central",
+      "destino": "Sector_C",
+      "costo_gasolina": 5,
+      "tiempo": 9,
+      "descripcion": "Av. La Guaricha hacia el sur, sector Las Cocuizas",
+      "waypoints": [
+        {
+          "lat": 9.7438,
+          "lng": -63.1839
+        },
+        {
+          "lat": 9.7422,
+          "lng": -63.1848
+        },
+        {
+          "lat": 9.7405,
+          "lng": -63.1858
+        },
+        {
+          "lat": 9.7388,
+          "lng": -63.1872
+        }
+      ]
+    },
+    {
+      "origen": "Almacen_Central",
+      "destino": "Sector_55",
+      "costo_gasolina": 0.5,
+      "tiempo": 2,
+      "descripcion": "Conexión automática",
+      "waypoints": []
+    },
+    {
+      "origen": "Sector_A",
+      "destino": "Sector_C",
+      "costo_gasolina": 4,
+      "tiempo": 7,
+      "descripcion": "Eje transversal Tipuro – zona sur",
+      "waypoints": [
+        {
+          "lat": 9.751,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7485,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7455,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7425,
+          "lng": -63.1875
+        },
+        {
+          "lat": 9.7395,
+          "lng": -63.1885
+        }
+      ]
+    },
+    {
+      "origen": "Sector_A",
+      "destino": "Sector_D",
+      "costo_gasolina": 5,
+      "tiempo": 8,
+      "descripcion": "Vía hacia el noreste por Av. Monagas",
+      "waypoints": [
+        {
+          "lat": 9.7525,
+          "lng": -63.185
+        },
+        {
+          "lat": 9.7518,
+          "lng": -63.1825
+        },
+        {
+          "lat": 9.751,
+          "lng": -63.1795
+        },
+        {
+          "lat": 9.7502,
+          "lng": -63.1765
+        },
+        {
+          "lat": 9.7495,
+          "lng": -63.1735
+        },
+        {
+          "lat": 9.749,
+          "lng": -63.1705
+        },
+        {
+          "lat": 9.7487,
+          "lng": -63.1675
+        },
+        {
+          "lat": 9.7485,
+          "lng": -63.1642
+        }
+      ]
+    },
+    {
+      "origen": "Sector_A",
+      "destino": "Sector_E",
+      "costo_gasolina": 7,
+      "tiempo": 11,
+      "descripcion": "Ruta hacia el sur por barrios residenciales",
+      "waypoints": [
+        {
+          "lat": 9.751,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7485,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7455,
+          "lng": -63.1872
+        },
+        {
+          "lat": 9.7425,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7395,
+          "lng": -63.1862
+        },
+        {
+          "lat": 9.7365,
+          "lng": -63.1845
+        },
+        {
+          "lat": 9.7342,
+          "lng": -63.1818
+        }
+      ]
+    },
+    {
+      "origen": "Sector_B",
+      "destino": "Sector_E",
+      "costo_gasolina": 3,
+      "tiempo": 6,
+      "descripcion": "Conexión zona comercial – La Floresta",
+      "waypoints": [
+        {
+          "lat": 9.743,
+          "lng": -63.172
+        },
+        {
+          "lat": 9.7415,
+          "lng": -63.1735
+        },
+        {
+          "lat": 9.7395,
+          "lng": -63.1745
+        },
+        {
+          "lat": 9.737,
+          "lng": -63.1758
+        },
+        {
+          "lat": 9.7345,
+          "lng": -63.1772
+        }
+      ]
+    },
+    {
+      "origen": "Sector_B",
+      "destino": "Sector_G",
+      "costo_gasolina": 4,
+      "tiempo": 8,
+      "descripcion": "Vía hacia el oeste por barrios populares",
+      "waypoints": [
+        {
+          "lat": 9.7442,
+          "lng": -63.174
+        },
+        {
+          "lat": 9.7445,
+          "lng": -63.177
+        },
+        {
+          "lat": 9.7448,
+          "lng": -63.18
+        },
+        {
+          "lat": 9.7445,
+          "lng": -63.183
+        },
+        {
+          "lat": 9.744,
+          "lng": -63.186
+        },
+        {
+          "lat": 9.7435,
+          "lng": -63.189
+        },
+        {
+          "lat": 9.743,
+          "lng": -63.192
+        },
+        {
+          "lat": 9.7425,
+          "lng": -63.1955
+        },
+        {
+          "lat": 9.7422,
+          "lng": -63.199
+        },
+        {
+          "lat": 9.742,
+          "lng": -63.202
+        }
+      ]
+    },
+    {
+      "origen": "Sector_C",
+      "destino": "Sector_D",
+      "costo_gasolina": 3,
+      "tiempo": 5,
+      "descripcion": "Atajo desde el sur al noreste",
+      "waypoints": [
+        {
+          "lat": 9.738,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7395,
+          "lng": -63.184
+        },
+        {
+          "lat": 9.741,
+          "lng": -63.181
+        },
+        {
+          "lat": 9.7425,
+          "lng": -63.178
+        },
+        {
+          "lat": 9.744,
+          "lng": -63.175
+        },
+        {
+          "lat": 9.7455,
+          "lng": -63.172
+        },
+        {
+          "lat": 9.7468,
+          "lng": -63.1685
+        },
+        {
+          "lat": 9.7476,
+          "lng": -63.1648
+        }
+      ]
+    },
+    {
+      "origen": "Sector_C",
+      "destino": "Sector_F",
+      "costo_gasolina": 4,
+      "tiempo": 6,
+      "descripcion": "Ruta hacia el parque y zona norte",
+      "waypoints": [
+        {
+          "lat": 9.7382,
+          "lng": -63.19
+        },
+        {
+          "lat": 9.74,
+          "lng": -63.1905
+        },
+        {
+          "lat": 9.742,
+          "lng": -63.191
+        },
+        {
+          "lat": 9.744,
+          "lng": -63.1915
+        },
+        {
+          "lat": 9.746,
+          "lng": -63.192
+        },
+        {
+          "lat": 9.748,
+          "lng": -63.1925
+        },
+        {
+          "lat": 9.75,
+          "lng": -63.193
+        },
+        {
+          "lat": 9.752,
+          "lng": -63.194
+        },
+        {
+          "lat": 9.754,
+          "lng": -63.195
+        }
+      ]
+    },
+    {
+      "origen": "Sector_D",
+      "destino": "Sector_F",
+      "costo_gasolina": 6,
+      "tiempo": 10,
+      "descripcion": "Camino industrial con tráfico pesado",
+      "waypoints": [
+        {
+          "lat": 9.7482,
+          "lng": -63.163
+        },
+        {
+          "lat": 9.748,
+          "lng": -63.166
+        },
+        {
+          "lat": 9.7485,
+          "lng": -63.169
+        },
+        {
+          "lat": 9.749,
+          "lng": -63.172
+        },
+        {
+          "lat": 9.7495,
+          "lng": -63.175
+        },
+        {
+          "lat": 9.75,
+          "lng": -63.178
+        },
+        {
+          "lat": 9.7508,
+          "lng": -63.181
+        },
+        {
+          "lat": 9.7515,
+          "lng": -63.184
+        },
+        {
+          "lat": 9.7525,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7535,
+          "lng": -63.19
+        },
+        {
+          "lat": 9.7548,
+          "lng": -63.193
+        }
+      ]
+    },
+    {
+      "origen": "Sector_E",
+      "destino": "Sector_F",
+      "costo_gasolina": 5,
+      "tiempo": 8,
+      "descripcion": "Avenida nueva que cruza la ciudad",
+      "waypoints": [
+        {
+          "lat": 9.733,
+          "lng": -63.1805
+        },
+        {
+          "lat": 9.735,
+          "lng": -63.182
+        },
+        {
+          "lat": 9.737,
+          "lng": -63.1835
+        },
+        {
+          "lat": 9.739,
+          "lng": -63.185
+        },
+        {
+          "lat": 9.741,
+          "lng": -63.1865
+        },
+        {
+          "lat": 9.743,
+          "lng": -63.188
+        },
+        {
+          "lat": 9.745,
+          "lng": -63.189
+        },
+        {
+          "lat": 9.747,
+          "lng": -63.19
+        },
+        {
+          "lat": 9.749,
+          "lng": -63.191
+        },
+        {
+          "lat": 9.751,
+          "lng": -63.192
+        },
+        {
+          "lat": 9.753,
+          "lng": -63.1935
+        },
+        {
+          "lat": 9.755,
+          "lng": -63.195
+        }
+      ]
+    },
+    {
+      "origen": "Sector_F",
+      "destino": "Sector_H",
+      "costo_gasolina": 3,
+      "tiempo": 5,
+      "descripcion": "Circunvalación sur-norte rápida",
+      "waypoints": [
+        {
+          "lat": 9.7565,
+          "lng": -63.194
+        },
+        {
+          "lat": 9.757,
+          "lng": -63.192
+        },
+        {
+          "lat": 9.7575,
+          "lng": -63.1895
+        },
+        {
+          "lat": 9.758,
+          "lng": -63.187
+        },
+        {
+          "lat": 9.7585,
+          "lng": -63.184
+        },
+        {
+          "lat": 9.759,
+          "lng": -63.181
+        },
+        {
+          "lat": 9.7592,
+          "lng": -63.178
+        },
+        {
+          "lat": 9.7595,
+          "lng": -63.1745
+        },
+        {
+          "lat": 9.7597,
+          "lng": -63.1718
+        }
+      ]
+    },
+    {
+      "origen": "Sector_G",
+      "destino": "Sector_H",
+      "costo_gasolina": 5,
+      "tiempo": 9,
+      "descripcion": "Acceso por la vía oeste con curvas ligeras",
+      "waypoints": [
+        {
+          "lat": 9.7425,
+          "lng": -63.2025
+        },
+        {
+          "lat": 9.7435,
+          "lng": -63.2
+        },
+        {
+          "lat": 9.7445,
+          "lng": -63.1975
+        },
+        {
+          "lat": 9.7455,
+          "lng": -63.195
+        },
+        {
+          "lat": 9.7465,
+          "lng": -63.1925
+        },
+        {
+          "lat": 9.7478,
+          "lng": -63.19
+        },
+        {
+          "lat": 9.749,
+          "lng": -63.1875
+        },
+        {
+          "lat": 9.7502,
+          "lng": -63.185
+        },
+        {
+          "lat": 9.7515,
+          "lng": -63.183
+        },
+        {
+          "lat": 9.753,
+          "lng": -63.1805
+        },
+        {
+          "lat": 9.7545,
+          "lng": -63.178
+        },
+        {
+          "lat": 9.756,
+          "lng": -63.1755
+        },
+        {
+          "lat": 9.7575,
+          "lng": -63.173
+        },
+        {
+          "lat": 9.7588,
+          "lng": -63.1708
+        }
+      ]
+    }
+  ]
+}

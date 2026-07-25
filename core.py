@@ -89,10 +89,18 @@ def buscar_producto_por_nombre(nombre: str):
 
 
 def guardar_estado():
-    """Guarda el estado actual (productos y órdenes pendientes) a JSON."""
+    """Guarda el estado actual (productos, órdenes, mapa y nodos_ref) a JSON."""
     productos = arbol.obtener_todos()
     datos_productos = [p.to_dict() for p in productos]
     guardar_datos(datos_productos, PRODUCTOS_FILE)
 
     datos_ordenes = cola.obtener_ordenes_pendientes_como_dicts()
     guardar_datos(datos_ordenes, ORDENES_FILE)
+
+    datos_mapa = mapa.to_dict()
+    guardar_datos(datos_mapa, MAPA_FILE)
+
+    import json
+    NODOS_REF_FILE = os.path.join(DATOS_DIR, 'mapa_nodos.json')
+    with open(NODOS_REF_FILE, 'w', encoding='utf-8') as f:
+        json.dump(mapa.nodos_ref, f, ensure_ascii=False, indent=2)

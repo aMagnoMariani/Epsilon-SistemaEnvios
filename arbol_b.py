@@ -1,6 +1,6 @@
 """
-Módulo Árbol B (e.g., Árbol 2-3 cuando M=3)
-Estructura de datos balanceada para búsqueda, inserción y actualización eficiente.
+Módulo Árbol B — Árbol 2-3 auto-balanceado (M=3). Búsqueda, inserción y división de nodos.
+NO implementa eliminación ni fusión de nodos. Complejidad O(log n).
 """
 
 from typing import Optional, List, Any

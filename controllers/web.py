@@ -1,9 +1,10 @@
 """
-Controlador web (rutas) — implementa la capa Controller en MVC.
+Controlador web principal (Flask) — rutas MVC para productos, órdenes, despacho, mapa e historial.
+Usa las estructuras globales de core.py (árbol B, tabla hash, cola de prioridad, grafo vial).
 """
 import os
 import time
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
 from core import arbol, cola, mapa, inicializar_sistema, guardar_estado
 from persistencia import guardar_datos
@@ -207,6 +208,13 @@ def guardar():
     return redirect(url_for('index'))
 
 
+@app.route('/static/tiles/<int:z>/<int:x>/<int:y>.png')
+def servir_tile(z, x, y):
+    from flask import send_from_directory
+    import os as _os
+    tile_path = _os.path.join(app.static_folder, 'tiles', str(z), str(x))
+    return send_from_directory(tile_path, f'{y}.png', mimetype='image/png')
+
 @app.route('/mapa')
 def ver_mapa():
     nodos = mapa.obtener_nodos()
@@ -215,6 +223,51 @@ def ver_mapa():
     productos_dicts = [p.to_dict() for p in arbol.obtener_todos()]
     return render_template('mapa.html', nodos=nodos, aristas=aristas, coordenadas=coordenadas, productos=productos_dicts, origen_seleccionado='Almacen_Central', destino_seleccionado='', estrategia_seleccionada='gasolina')
 
+
+@app.route('/mapa/nodo/nuevo', methods=['POST'])
+def nuevo_nodo_mapa():
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'error': 'Datos inválidos.'})
+
+    nombre = data.get('nombre', '').strip()
+    lat = data.get('lat')
+    lng = data.get('lng')
+    conectar_con = data.get('conectar_con')
+
+    if not nombre or lat is None or lng is None:
+        return jsonify({'success': False, 'error': 'Nombre y coordenadas son requeridos.'})
+
+    nombre = nombre.replace(' ', '_')
+    exito = mapa.agregar_nodo(nombre, lat, lng)
+    if not exito:
+        return jsonify({'success': False, 'error': f'Ya existe un sector llamado {nombre}.'})
+
+    if conectar_con:
+        if conectar_con not in mapa.grafo:
+            return jsonify({'success': False, 'error': f'El nodo {conectar_con} no existe.'})
+        vecino = conectar_con
+        coords_vecino = mapa.coordenadas[vecino]
+        dist = mapa._distancia_haversine({'lat': lat, 'lng': lng}, coords_vecino)
+    else:
+        distancia_min = float('inf')
+        vecino = None
+        for nodo_existente, coords in mapa.coordenadas.items():
+            if nodo_existente == nombre:
+                continue
+            d = mapa._distancia_haversine({'lat': lat, 'lng': lng}, coords)
+            if d < distancia_min:
+                distancia_min = d
+                vecino = nodo_existente
+        dist = distancia_min if vecino else 0
+
+    if vecino:
+        tiempo_est = mapa._estimacion_tiempo_directo(dist)
+        costo = round(dist * 0.5, 1)
+        mapa.agregar_arista(nombre, vecino, costo_gasolina=max(costo, 0.5), tiempo=max(tiempo_est, 1.0), descripcion='Conexión automática')
+
+    guardar_estado()
+    return jsonify({'success': True, 'nombre': nombre})
 
 @app.route('/mapa/calcular', methods=['POST'])
 def calcular_ruta_mapa():
@@ -226,22 +279,35 @@ def calcular_ruta_mapa():
         flash('Selecciona un destino.', 'warning')
         return redirect(url_for('ver_mapa'))
 
-    costo, camino, detalles = mapa.calcular_ruta(origen, destino, estrategia)
+    costo, ruta_waypoints, detalles = mapa.calcular_ruta(origen, destino, estrategia)
+
     nodos = mapa.obtener_nodos()
     aristas = mapa.obtener_aristas()
     coordenadas = mapa.coordenadas
     productos_dicts = [p.to_dict() for p in arbol.obtener_todos()]
 
-    if camino:
-        tipo_str = 'unidades de combustible' if estrategia == 'gasolina' else 'minutos'
-        if estrategia == 'tiempo':
-            origen_texto = origen.replace('_', ' ')
-            destino_texto = destino.replace('_', ' ')
-            flash(f'Ruta directa más rápida: {origen_texto} -> {destino_texto} (Tiempo estimado: {costo} {tipo_str})', 'success')
-        else:
-            ruta_str = ' -> '.join([n.replace('_', ' ') for n in camino])
-            flash(f'Ruta óptima ({estrategia}): {ruta_str} (Costo total: {costo} {tipo_str})', 'success')
+    calles_nombres = []
+    for d in detalles:
+        nombre = d.get('descripcion', '')
+        if nombre and nombre not in calles_nombres:
+            calles_nombres.append(nombre)
+
+    if ruta_waypoints:
+        origen_s = origen.replace('_', ' ')
+        destino_s = destino.replace('_', ' ')
+        num_pts = len(ruta_waypoints) if isinstance(ruta_waypoints, list) else 0
+        tipo = '⛽ Gasolina' if estrategia == 'gasolina' else '⚡ Rápida'
+        unidad = 'uds' if estrategia == 'gasolina' else 'min'
+        calles_str = ' → '.join(calles_nombres[:5]) if calles_nombres else ''
+        if len(calles_nombres) > 5:
+            calles_str += '...'
+        flash(f'{origen_s} → {destino_s} | {tipo}: {costo} {unidad} ({num_pts} pts) | {calles_str}', 'success')
     else:
         flash(f'No se encontró ruta de {origen} a {destino}.', 'danger')
 
-    return render_template('mapa.html', nodos=nodos, aristas=aristas, coordenadas=coordenadas, productos=productos_dicts, ruta_camino=camino, ruta_costo=costo, ruta_detalles=detalles, origen_seleccionado=origen, destino_seleccionado=destino, estrategia_seleccionada=estrategia)
+    return render_template('mapa.html',
+        nodos=nodos, aristas=aristas, coordenadas=coordenadas,
+        productos=productos_dicts,
+        ruta_waypoints=ruta_waypoints, ruta_costo=costo, ruta_detalles=detalles,
+        estrategia_seleccionada=estrategia,
+        origen_seleccionado=origen, destino_seleccionado=destino)

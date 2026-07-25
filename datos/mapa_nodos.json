@@ -1,0 +1,74 @@
+{
+  "Almacen_Central": {
+    "node_id": "2136683955",
+    "lat": 9.7456,
+    "lng": -63.1832,
+    "osm_node_lat": 9.7455489,
+    "osm_node_lng": -63.183355,
+    "distancia_al_nodo": 17.9
+  },
+  "Sector_A": {
+    "node_id": "6291915682",
+    "lat": 9.7532,
+    "lng": -63.1875,
+    "osm_node_lat": 9.7519488,
+    "osm_node_lng": -63.1865673,
+    "distancia_al_nodo": 172.6
+  },
+  "Sector_B": {
+    "node_id": "2132507779",
+    "lat": 9.744,
+    "lng": -63.171,
+    "osm_node_lat": 9.7435158,
+    "osm_node_lng": -63.1711246,
+    "distancia_al_nodo": 55.5
+  },
+  "Sector_C": {
+    "node_id": "2130348674",
+    "lat": 9.7365,
+    "lng": -63.1895,
+    "osm_node_lat": 9.7364018,
+    "osm_node_lng": -63.1903882,
+    "distancia_al_nodo": 98.0
+  },
+  "Sector_D": {
+    "node_id": "4253020462",
+    "lat": 9.7484,
+    "lng": -63.1608,
+    "osm_node_lat": 9.7516739,
+    "osm_node_lng": -63.162425,
+    "distancia_al_nodo": 405.3
+  },
+  "Sector_E": {
+    "node_id": "2131792165",
+    "lat": 9.7318,
+    "lng": -63.179,
+    "osm_node_lat": 9.7313854,
+    "osm_node_lng": -63.1786439,
+    "distancia_al_nodo": 60.4
+  },
+  "Sector_F": {
+    "node_id": "5028973489",
+    "lat": 9.756,
+    "lng": -63.196,
+    "osm_node_lat": 9.7536898,
+    "osm_node_lng": -63.1965566,
+    "distancia_al_nodo": 264.0
+  },
+  "Sector_G": {
+    "node_id": "11416162340",
+    "lat": 9.742,
+    "lng": -63.2045,
+    "osm_node_lat": 9.7431153,
+    "osm_node_lng": -63.204622,
+    "distancia_al_nodo": 124.7
+  },
+  "Sector_H": {
+    "node_id": "2426183126",
+    "lat": 9.7598,
+    "lng": -63.169,
+    "osm_node_lat": 9.7595354,
+    "osm_node_lng": -63.1690905,
+    "distancia_al_nodo": 31.0
+  }
+}

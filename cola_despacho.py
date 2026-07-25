@@ -1,6 +1,6 @@
 """
-Módulo de Cola de Despacho — Unidad III
-Cola de prioridad con heapq y pila de historial para operaciones de deshacer.
+Módulo de Cola de Despacho — Cola de prioridad (heapq) + pila LIFO de historial.
+Express (prioridad 0) se despacha antes que Normal (prioridad 1). Soporta deshacer.
 """
 
 import heapq
