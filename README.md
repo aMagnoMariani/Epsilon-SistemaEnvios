@@ -49,4 +49,4 @@ pytest  # 49 tests unitarios
 
 ## Licencia
 
-Proyecto académico — Universidad de Oriente, Núcleo Monado, 2026.
+Proyecto académico — Universidad de Oriente, Núcleo Monagas, 2026.
