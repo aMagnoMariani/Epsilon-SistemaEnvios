@@ -2,7 +2,7 @@
 
 ## Resumen de Cambios
 
-Este documento describe la implementación y mejora de estructuras de datos de grafos y tablas hash en el Sistema de Logística de Última Milla Epsilon_UDO.
+Este documento describe la implementación y mejora de estructuras de datos de grafos y tablas hash en el Sistema EnviosEpsilon_UDO.
 
 ---
 
